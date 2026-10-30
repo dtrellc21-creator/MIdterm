@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gor_app_midterm.MainPage"
+             BackgroundColor="#F6F8F5" Title="FreshCart">
+    <Grid RowDefinitions="Auto,Auto,*">
+        <VerticalStackLayout Grid.Row="0" BackgroundColor="#176B43" Padding="22,18" Spacing="5">
+            <Label Text="FreshCart" TextColor="White" FontSize="30" FontAttributes="Bold" />
+            <Label Text="Fresh picks for every day" TextColor="#DFF4E8" FontSize="14" />
+        </VerticalStackLayout>
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*" Padding="12,10" ColumnSpacing="8">
+            <Button Text="Shop" Clicked="ShowShop" BackgroundColor="#176B43" TextColor="White" CornerRadius="12" />
+            <Button Grid.Column="1" Text="Cart" Clicked="ShowCart" BackgroundColor="#176B43" TextColor="White" CornerRadius="12" />
+            <Button Grid.Column="2" Text="My List" Clicked="ShowList" BackgroundColor="#176B43" TextColor="White" CornerRadius="12" />
+        </Grid>
+        <Grid Grid.Row="2" Padding="14,4,14,10">
+            <Grid x:Name="ShopSection" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="10">
+                <Label Text="Shop groceries" FontSize="23" FontAttributes="Bold" TextColor="#20382A" />
+                <SearchBar Grid.Row="1" Placeholder="Search products or categories" TextChanged="OnSearchChanged" BackgroundColor="White" />
+                <ScrollView Grid.Row="2" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                    <HorizontalStackLayout Spacing="7">
+                        <Button Text="All" CommandParameter="All" Clicked="FilterCategory" BackgroundColor="#DDEDE2" TextColor="#176B43" />
+                        <Button Text="Fruits" CommandParameter="Fruits" Clicked="FilterCategory" BackgroundColor="#DDEDE2" TextColor="#176B43" />
+                        <Button Text="Dairy" CommandParameter="Dairy" Clicked="FilterCategory" BackgroundColor="#DDEDE2" TextColor="#176B43" />
+                        <Button Text="Bakery" CommandParameter="Bakery" Clicked="FilterCategory" BackgroundColor="#DDEDE2" TextColor="#176B43" />
+                        <Button Text="Meat" CommandParameter="Meat" Clicked="FilterCategory" BackgroundColor="#DDEDE2" TextColor="#176B43" />
+                        <Button Text="Pantry" CommandParameter="Pantry" Clicked="FilterCategory" BackgroundColor="#DDEDE2" TextColor="#176B43" />
+                        <Button Text="Drinks" CommandParameter="Drinks" Clicked="FilterCategory" BackgroundColor="#DDEDE2" TextColor="#176B43" />
+                    </HorizontalStackLayout>
+                </ScrollView>
+                <CollectionView Grid.Row="3" x:Name="ProductList" SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2" VerticalItemSpacing="10" HorizontalItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White" Stroke="#E3EAE4" StrokeThickness="1" StrokeShape="RoundRectangle 14" Padding="10">
+                                <VerticalStackLayout Spacing="5">
+                                    <Image Source="{Binding Image}" HeightRequest="100" WidthRequest="120" HorizontalOptions="Center" Aspect="AspectFit" />
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="#20382A" />
+                                    <Label Text="{Binding Category}" FontSize="12" TextColor="#65736A" />
+                                    <Label Text="{Binding OriginalPriceText}" FontSize="11" TextColor="#9A3030" />
+                                    <Label Text="{Binding PriceText}" FontAttributes="Bold" TextColor="#176B43" FontSize="17" />
+                                    <Button Text="Details" Clicked="ShowProductDetails" CommandParameter="{Binding .}" BackgroundColor="#E4F0E7" TextColor="#176B43" CornerRadius="10" FontSize="12" />
+                                    <Button Text="Add to cart +" Clicked="AddToCart" CommandParameter="{Binding .}" BackgroundColor="#176B43" TextColor="White" CornerRadius="10" FontSize="12" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+            <Grid x:Name="CartSection" IsVisible="False" RowDefinitions="Auto,*,Auto,Auto,Auto" RowSpacing="10">
+                <Label Text="My cart" FontSize="24" FontAttributes="Bold" TextColor="#20382A" />
+                <CollectionView Grid.Row="1" x:Name="CartList" SelectionMode="None" EmptyView="Your cart is empty.">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White" Stroke="#E3EAE4" StrokeShape="RoundRectangle 12" Padding="12" Margin="0,4">
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="#20382A" FontSize="17" />
+                                    <Label Grid.Row="1" Text="{Binding LineTotal}" TextColor="#176B43" />
+                                    <HorizontalStackLayout Grid.Column="1" Grid.RowSpan="2" Spacing="6" VerticalOptions="Center">
+                                        <Button Text="−" Clicked="DecreaseQuantity" CommandParameter="{Binding .}" BackgroundColor="#DDEDE2" TextColor="#176B43" WidthRequest="42" />
+                                        <Label Text="{Binding Quantity}" VerticalOptions="Center" TextColor="#20382A" />
+                                        <Button Text="+" Clicked="IncreaseQuantity" CommandParameter="{Binding .}" BackgroundColor="#DDEDE2" TextColor="#176B43" WidthRequest="42" />
+                                    </HorizontalStackLayout>
+                                    <Button Grid.Row="2" Grid.ColumnSpan="2" Text="Remove" Clicked="RemoveCartItem" CommandParameter="{Binding .}" BackgroundColor="#F8E8E6" TextColor="#9A3030" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Label Grid.Row="2" x:Name="TotalLabel" Text="Total: $0.00" FontSize="23" FontAttributes="Bold" TextColor="#176B43" />
+                <Button Grid.Row="3" Text="Checkout (demo)" Clicked="Checkout" BackgroundColor="#176B43" TextColor="White" />
+                <Button Grid.Row="4" Text="Clear cart" Clicked="ClearCart" BackgroundColor="#9A3030" TextColor="White" />
+            </Grid>
+            <Grid x:Name="ListSection" IsVisible="False" RowDefinitions="Auto,Auto,*" RowSpacing="12">
+                <Label Text="My shopping list" FontSize="24" FontAttributes="Bold" TextColor="#20382A" />
+                <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <Entry x:Name="ListEntry" Placeholder="Add a grocery item" BackgroundColor="White" TextColor="#20382A" />
+                    <Button Grid.Column="1" Text="Add" Clicked="AddListItem" BackgroundColor="#176B43" TextColor="White" />
+                </Grid>
+                <CollectionView Grid.Row="2" x:Name="ShoppingList" EmptyView="Your list is empty.">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White" Stroke="#E3EAE4" StrokeShape="RoundRectangle 12" Padding="10" Margin="0,4">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding .}" TextColor="#20382A" VerticalOptions="Center" />
+                                    <Button Grid.Column="1" Text="Remove" Clicked="RemoveListItem" CommandParameter="{Binding .}" BackgroundColor="#F8E8E6" TextColor="#9A3030" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>
